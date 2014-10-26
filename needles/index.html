@@ -23,7 +23,7 @@
 
     var NEEDLES_X     = 15;
     var NEEDLES_Y     = 15;
-    var NEEDLE_LENGTH = 7; // In px
+    var NEEDLE_LENGTH = 21; // In px
     var NEEDLE_COLOR  = 'white';
     var NEEDLE_THICKNESS = 1;
 
@@ -58,11 +58,14 @@
     }
 
     function initNeedles() {
-      var x = 1, y = 1, needle = {};
+      var x = 1
+      var y = 1
+      var needle = {};
+      var center = {};
 
       var needlesCount = NEEDLES_X * NEEDLES_Y;
-      var offsetX = CANVAS_WIDTH / NEEDLES_X;
-      var offsetY = CANVAS_HEIGHT / NEEDLES_Y;
+      var offsetX = (4/5) * CANVAS_WIDTH / NEEDLES_X;
+      var offsetY = (4/5) * CANVAS_HEIGHT / NEEDLES_Y;
 
       for(; x < NEEDLES_X; x++) {
         y = 1;
@@ -71,11 +74,20 @@
              y > (NEEDLES_Y / 3) && (y < NEEDLES_Y * 2 / 3)) {
             continue;
           }
+          center = {
+            x: x * offsetX,
+            y: y * offsetY,
+          };
+
           needle = {
-            coord: {
-              x: x * offsetX,
-              y: y * offsetY
-            },
+            center: center,
+            extremities: [{
+              x: center.x - NEEDLE_LENGTH,
+              y: center.y - NEEDLE_LENGTH
+            }, {
+              x: center.x + NEEDLE_LENGTH,
+              y: center.y + NEEDLE_LENGTH
+            }],
             color: NEEDLE_COLOR,
             size: NEEDLE_LENGTH
           };
@@ -119,12 +131,30 @@
       });
     }
 
-    function updateNeedle(needle, coord) {
-      var deltaX = needle.coord.x - coord.x;
-      var deltaY = needle.coord.y - coord.y;
+    function updateNeedle(needle, ballCoord) {
+      var xtFirst = 0, ytFirst = 0;
+      var xtLast = 0, ytLast = 0;
+      var distance = Math.sqrt(
+        Math.pow(ballCoord.x - needle.center.x, 2) + Math.pow(ballCoord.y - needle.center.y, 2)
+      );
 
+      if (distance !== 0) {
+        var t = NEEDLE_LENGTH / distance;
+        xtFirst = (1 + t) * needle.center.x + (-t * ballCoord.x);
+        ytFirst = (1 + t) * needle.center.y + (-t * ballCoord.y);
+        xtLast = (1 - t) * needle.center.x + (t * ballCoord.x);
+        ytLast = (1 - t) * needle.center.y + (t * ballCoord.y);
+      }
 
+      needle.extremities = [{
+        x: xtFirst,
+        y: ytFirst
+      }, {
+        x: xtLast,
+        y: ytLast
+      }];
     }
+
 
     function draw() {
       clear();
@@ -145,8 +175,8 @@
       context.lineWidth   = NEEDLE_THICKNESS;
       needles.forEach(function(needle) {
         context.beginPath();
-        this.context.moveTo(needle.coord.x, needle.coord.y);
-        this.context.lineTo(needle.coord.x + 1, needle.coord.y + 1);
+        this.context.moveTo(needle.extremities[0].x, needle.extremities[0].y);
+        this.context.lineTo(needle.extremities[1].x + 1, needle.extremities[1].y + 1);
         this.context.closePath();
         this.context.stroke();
       });
