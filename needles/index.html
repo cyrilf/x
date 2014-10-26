@@ -68,7 +68,7 @@
 
     var NEEDLES_X     = 15;
     var NEEDLES_Y     = 15;
-    var NEEDLE_LENGTH = 20; // In px
+    var NEEDLE_LENGTH = 42; // In px
     var NEEDLE_COLOR  = '#D8EAEF';
     var NEEDLE_THICKNESS = 1;
 
@@ -132,13 +132,10 @@
 
           needle = {
             center: center,
-            extremities: [{
-              x: center.x - NEEDLE_LENGTH,
-              y: center.y - NEEDLE_LENGTH
-            }, {
+            extremity: {
               x: center.x + NEEDLE_LENGTH,
               y: center.y + NEEDLE_LENGTH
-            }]
+            }
           };
           needles.push(needle)
         }
@@ -198,27 +195,22 @@
     }
 
     function updateNeedle(needle, ballCoord) {
-      var xtFirst = 0, ytFirst = 0;
-      var xtLast = 0, ytLast = 0;
+      var xt = 0;
+      var yt = 0;
       var distance = Math.sqrt(
         Math.pow(ballCoord.x - needle.center.x, 2) + Math.pow(ballCoord.y - needle.center.y, 2)
       );
 
       if (distance !== 0) {
         var t = NEEDLE_LENGTH / distance;
-        xtFirst = (1 + t) * needle.center.x + (-t * ballCoord.x);
-        ytFirst = (1 + t) * needle.center.y + (-t * ballCoord.y);
-        xtLast = (1 - t) * needle.center.x + (t * ballCoord.x);
-        ytLast = (1 - t) * needle.center.y + (t * ballCoord.y);
+        xt = (1 - t) * needle.center.x + (t * ballCoord.x);
+        yt = (1 - t) * needle.center.y + (t * ballCoord.y);
       }
 
-      needle.extremities = [{
-        x: xtFirst,
-        y: ytFirst
-      }, {
-        x: xtLast,
-        y: ytLast
-      }];
+      needle.extremity = {
+        x: xt,
+        y: yt
+      };
     }
 
     // UI - Drawings
@@ -242,8 +234,8 @@
       context.lineWidth   = NEEDLE_THICKNESS;
       needles.forEach(function(needle) {
         context.beginPath();
-        this.context.moveTo(needle.extremities[0].x, needle.extremities[0].y);
-        this.context.lineTo(needle.extremities[1].x + 1, needle.extremities[1].y + 1);
+        this.context.moveTo(needle.center.x, needle.center.y);
+        this.context.lineTo(needle.extremity.x + 1, needle.extremity.y + 1);
         this.context.closePath();
         this.context.stroke();
       });
