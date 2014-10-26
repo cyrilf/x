@@ -59,8 +59,8 @@
   <script type="text/javascript">
     // CONSTANTS
 
-    var DRAWING_ZONE_WIDTH  = 600;
-    var DRAWING_ZONE_HEIGHT = 600;
+    var DRAWING_ZONE_WIDTH  = 350;
+    var DRAWING_ZONE_HEIGHT = 350;
     var CANVAS_BACKGROUND = '#1CADC4';
 
     var BALL_COLOR = '#FBFD13';
@@ -68,7 +68,7 @@
 
     var NEEDLES_X     = 15;
     var NEEDLES_Y     = 15;
-    var NEEDLE_LENGTH = 42; // In px
+    var NEEDLE_LENGTH = 25; // In px
     var NEEDLE_COLOR  = '#D8EAEF';
     var NEEDLE_THICKNESS = 1;
 
@@ -117,9 +117,9 @@
       var offsetX = DRAWING_ZONE_WIDTH / NEEDLES_X;
       var offsetY = DRAWING_ZONE_HEIGHT / NEEDLES_Y;
 
-      for(; x < NEEDLES_X; x++) {
+      for(; x <= NEEDLES_X; x++) {
         y = 1;
-        for(; y < NEEDLES_Y; y++) {
+        for(; y <= NEEDLES_Y; y++) {
           // Remove the center part
           if(x > (NEEDLES_X / 3) && (x < NEEDLES_X * 2 / 3) &&
              y > (NEEDLES_Y / 3) && (y < NEEDLES_Y * 2 / 3)) {
@@ -127,7 +127,7 @@
           }
           center = {
             x: x * offsetX + ((canvasWidth  - DRAWING_ZONE_WIDTH ) / 2),
-            y: y * offsetY + ((canvasHeight - DRAWING_ZONE_HEIGHT) / 2),
+            y: y * offsetY + ((canvasHeight - DRAWING_ZONE_HEIGHT) / 3),
           };
 
           needle = {
@@ -217,8 +217,8 @@
 
     function draw() {
       clear();
-      drawBall();
       drawNeedles();
+      drawBall();
     }
 
     function drawBall() {
