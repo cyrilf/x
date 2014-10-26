@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Needles</title>
+  <style type="text/css">
+    canvas {
+      border: 1px solid rgba(1, 50, 75, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div id="canvasContainer"></div>
+  <script type="text/javascript">
+    var CANVAS_WIDTH  = 700;
+    var CANVAS_HEIGHT = 700;
+
+    var CANVAS_BACKGROUND = '#1CADC4';
+
+    var BALL_COLOR = '#FBFD13';
+    var BALL_SIZE  = 7; // In px
+
+    var NEEDLES_X     = 15;
+    var NEEDLES_Y     = 15;
+    var NEEDLE_LENGTH = 7; // In px
+    var NEEDLE_COLOR  = 'white';
+    var NEEDLE_THICKNESS = 1;
+
+
+    var canvasContainer = document.getElementById('canvasContainer');
+    var canvas          = document.createElement('canvas');
+    canvas.setAttribute('width', CANVAS_WIDTH);
+    canvas.setAttribute('height', CANVAS_HEIGHT);
+    canvas.style.cursor = 'none';
+    canvas.setAttribute('id', 'canvas');
+    canvasContainer.appendChild(canvas);
+    var context = canvas.getContext('2d');
+
+    var ball = {
+      coord: {
+        x: CANVAS_WIDTH / 2,
+        y: CANVAS_HEIGHT / 2
+      },
+      color: BALL_COLOR,
+      size: BALL_SIZE
+    };
+
+    var needles = [];
+
+    registerEvents();
+    initNeedles();
+    draw();
+
+
+    function registerEvents() {
+      canvas.addEventListener('mousemove', handleMove, false);
+    }
+
+    function initNeedles() {
+      var x = 1, y = 1, needle = {};
+
+      var needlesCount = NEEDLES_X * NEEDLES_Y;
+      var offsetX = CANVAS_WIDTH / NEEDLES_X;
+      var offsetY = CANVAS_HEIGHT / NEEDLES_Y;
+
+      for(; x < NEEDLES_X; x++) {
+        y = 1;
+        for(; y < NEEDLES_Y; y++) {
+          if(x > (NEEDLES_X / 3) && (x < NEEDLES_X * 2 / 3) &&
+             y > (NEEDLES_Y / 3) && (y < NEEDLES_Y * 2 / 3)) {
+            continue;
+          }
+          needle = {
+            coord: {
+              x: x * offsetX,
+              y: y * offsetY
+            },
+            color: NEEDLE_COLOR,
+            size: NEEDLE_LENGTH
+          };
+          needles.push(needle)
+        }
+      }
+    }
+
+    function handleMove(e) {
+      var isTouchEvent = e.touches ? true : false;
+      var x, y;
+      if(isTouchEvent) {
+        x = e.touches[0].pageX;
+        y = e.touches[0].pageY;
+      } else {
+        x = e.pageX;
+        y = e.pageY;
+      }
+
+      var coord = {
+        x: x,
+        y: y
+      };
+
+      updateCanvas(coord);
+    }
+
+    function updateCanvas(coord) {
+      updateBall(coord);
+      updateNeedles(coord);
+      draw();
+    }
+
+    function updateBall(coord) {
+      ball.coord = coord;
+    }
+
+    function updateNeedles(coord) {
+      needles.forEach(function(needle) {
+        updateNeedle(needle, coord);
+      });
+    }
+
+    function updateNeedle(needle, coord) {
+      var deltaX = needle.coord.x - coord.x;
+      var deltaY = needle.coord.y - coord.y;
+
+
+    }
+
+    function draw() {
+      clear();
+      drawBall();
+      drawNeedles();
+    }
+
+    function drawBall() {
+      context.beginPath();
+      context.arc(ball.coord.x, ball.coord.y, BALL_SIZE, 0, 2 * Math.PI, false);
+      context.fillStyle = BALL_COLOR;
+      context.fill();
+      this.context.closePath();
+    }
+
+    function drawNeedles() {
+      context.strokeStyle = NEEDLE_COLOR;
+      context.lineWidth   = NEEDLE_THICKNESS;
+      needles.forEach(function(needle) {
+        context.beginPath();
+        this.context.moveTo(needle.coord.x, needle.coord.y);
+        this.context.lineTo(needle.coord.x + 1, needle.coord.y + 1);
+        this.context.closePath();
+        this.context.stroke();
+      });
+    }
+
+    function clear() {
+      context.fillStyle = CANVAS_BACKGROUND;
+      context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    }
+  </script>
+</body>
+</html>
