@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Assassin</title>
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+		<style type="text/css">
+			body {
+				margin : 0;
+				padding : 0;
+				overflow: hidden;
+				font-family: 'Open Sans', sans-serif;
+				color : white;
+			}
+
+			#container {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 100%;
+				background: #FFF;
+				background: -webkit-linear-gradient(#FFF, #CCC);
+				background: -moz-linear-gradient(#FFF, #CCC);
+				background: -o-linear-gradient(#FFF, #CCC);
+				background: -ms-linear-gradient(#FFF, #CCC);
+				background: linear-gradient(#FFF, #CCC);
+			}
+
+			#wrap {
+				width : 1020px;
+				margin: 0 auto;
+			}
+
+			#content {
+				z-index: 2;
+				position: relative;
+				width:607px;
+				margin: 0 auto;
+				text-align: center;
+				top : 100px;
+			}
+
+			#content div {
+				background: rgb(220,220,220);
+				padding: 7px;
+				font-size: 2em;
+			}
+
+			#author {
+				z-index: 2;
+				position: relative;
+				top: 100px;
+				width: 607px;
+				margin: 0 auto;
+				text-align: right;
+			}
+
+			a,
+	    a:active,
+	    a:hover,
+	    a:visited {
+	      color : #A6D1A0;
+	      text-decoration: none;
+	      pointer-events: auto;
+	    }
+
+	    a:hover {
+	      color: #BD0400;
+	      text-decoration: underline;
+	    }
+		</style>
+	</head>
+	<body>
+		<div id="container"></div>
+		<div id="content">
+			<img id="logo" src="logo.png" alt="logo" width="256" height="256">
+			<div>We work in the dark, to serve the light. We are Assassins.</div>
+		</div>
+		<div id="author">
+			an eXperiment by <a href="//cyrilf.com">cyrilf</a>
+		</div>
+	</body>
+	<script type="text/javascript" src="three.js"></script>
+	<script type="text/javascript" src="main.js"></script>
+</html>
