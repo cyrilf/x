@@ -81,8 +81,8 @@
 
     var ball = {
       coord: {
-        x: canvasWidth / 2,
-        y: canvasHeight / 2
+        x: (canvasWidth - DRAWING_ZONE_WIDTH)  / 2 + DRAWING_ZONE_WIDTH / 2 + NEEDLE_LENGTH / 2,
+        y: (canvasHeight - DRAWING_ZONE_HEIGHT) / 3 + DRAWING_ZONE_HEIGHT / 2 + NEEDLE_LENGTH / 2
       },
       color: BALL_COLOR,
       size: BALL_SIZE
