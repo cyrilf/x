@@ -14,11 +14,14 @@
     }
 
     body {
-      background-color: #1CADC4;
       color: #D8EAEF;
       text-align: center;
       font-family: 'Open Sans', sans-serif;
+    }
+
+    #canvasContainer {
       overflow: hidden;
+      height: 100%;
     }
 
     #text-section {
@@ -54,6 +57,8 @@
   </div>
 
   <script type="text/javascript">
+    // CONSTANTS
+
     var DRAWING_ZONE_WIDTH  = 600;
     var DRAWING_ZONE_HEIGHT = 600;
     var CANVAS_BACKGROUND = '#1CADC4';
@@ -67,9 +72,10 @@
     var NEEDLE_COLOR  = '#D8EAEF';
     var NEEDLE_THICKNESS = 1;
 
+
+
     var canvasWidth  = window.innerWidth;
     var canvasHeight = window.innerHeight;
-
     var canvas = initCanvas();
     var context = canvas.getContext('2d');
 
@@ -82,12 +88,11 @@
       size: BALL_SIZE
     };
 
-    var needles = [];
-
-    registerEvents();
     var needles = initNeedles();
+    registerEvents();
     draw();
 
+    // Initialization
 
     function initCanvas() {
       var canvasContainer = document.getElementById('canvasContainer');
@@ -95,14 +100,10 @@
       canvas.setAttribute('width', canvasWidth);
       canvas.setAttribute('height', canvasHeight);
       canvas.style.cursor = 'none';
+      document.body.style['background-color'] = CANVAS_BACKGROUND;
       canvasContainer.appendChild(canvas);
 
       return canvas;
-    }
-
-    function registerEvents() {
-      canvas.addEventListener('mousemove', handleMove, false);
-      canvas.addEventListener('touchmove', handleMove, false);
     }
 
     function initNeedles() {
@@ -119,6 +120,7 @@
       for(; x < NEEDLES_X; x++) {
         y = 1;
         for(; y < NEEDLES_Y; y++) {
+          // Remove the center part
           if(x > (NEEDLES_X / 3) && (x < NEEDLES_X * 2 / 3) &&
              y > (NEEDLES_Y / 3) && (y < NEEDLES_Y * 2 / 3)) {
             continue;
@@ -145,6 +147,13 @@
       return needles;
     }
 
+    // Events handling
+
+    function registerEvents() {
+      canvas.addEventListener('mousemove', handleMove, false);
+      canvas.addEventListener('touchmove', handleMove, false);
+    }
+
     function handleMove(e) {
       var isTouchEvent = e.touches ? true : false;
       var x, y;
@@ -169,6 +178,8 @@
 
       updateCanvas(coord);
     }
+
+    // Elements update postion
 
     function updateCanvas(coord) {
       updateBall(coord);
@@ -210,6 +221,7 @@
       }];
     }
 
+    // UI - Drawings
 
     function draw() {
       clear();
