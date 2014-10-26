@@ -3,15 +3,59 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Needles</title>
+  <title>needles</title>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
   <style type="text/css">
+    html, body {
+      width:  100%;
+      height: 100%;
+      margin: 0px;
+    }
+
+    body {
+      background-color: #1CADC4;
+      color: #D8EAEF;
+      text-align: center;
+      font-family: 'Open Sans', sans-serif;
+      overflow: hidden;
+    }
+
+    #text-section {
+      position: relative;
+      top: -20%;
+      pointer-events:none;
+    }
+
+    small {
+      color: #9DCEDB;
+    }
+
+    a,
+    a:active,
+    a:hover,
+    a:visited {
+      color : #A6D1A0;
+      text-decoration: none;
+      pointer-events: auto;
+    }
+
+    a:hover {
+      color: #ffff00;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <div id="canvasContainer"></div>
+  <div id="text-section">
+    <h1>- needles -</h1>
+    <small>An eXpriment by <a href="//cyrilf.com">cyrilf</a> inspired by great the work of <a href="//dribbble.com/shots/1780193-Dots-16-0">Mark Pearson</a></small>
+  </div>
+
   <script type="text/javascript">
-    var CANVAS_WIDTH  = 700;
-    var CANVAS_HEIGHT = 700;
+    var DRAWING_ZONE_WIDTH  = 600;
+    var DRAWING_ZONE_HEIGHT = 600;
     var CANVAS_BACKGROUND = '#1CADC4';
 
     var BALL_COLOR = '#FBFD13';
@@ -19,17 +63,20 @@
 
     var NEEDLES_X     = 15;
     var NEEDLES_Y     = 15;
-    var NEEDLE_LENGTH = 18; // In px
-    var NEEDLE_COLOR  = 'white';
+    var NEEDLE_LENGTH = 20; // In px
+    var NEEDLE_COLOR  = '#D8EAEF';
     var NEEDLE_THICKNESS = 1;
+
+    var canvasWidth  = window.innerWidth;
+    var canvasHeight = window.innerHeight;
 
     var canvas = initCanvas();
     var context = canvas.getContext('2d');
 
     var ball = {
       coord: {
-        x: CANVAS_WIDTH / 2,
-        y: CANVAS_HEIGHT / 2
+        x: canvasWidth / 2,
+        y: canvasHeight / 2
       },
       color: BALL_COLOR,
       size: BALL_SIZE
@@ -43,11 +90,12 @@
 
 
     function initCanvas() {
-      var canvas = document.createElement('canvas');
-      canvas.setAttribute('width', CANVAS_WIDTH);
-      canvas.setAttribute('height', CANVAS_HEIGHT);
+      var canvasContainer = document.getElementById('canvasContainer');
+      var canvas          = document.createElement('canvas');
+      canvas.setAttribute('width', canvasWidth);
+      canvas.setAttribute('height', canvasHeight);
       canvas.style.cursor = 'none';
-      document.body.appendChild(canvas);
+      canvasContainer.appendChild(canvas);
 
       return canvas;
     }
@@ -58,15 +106,15 @@
     }
 
     function initNeedles() {
-      var x = 1;
-      var y = 1;
-      var needles = [];
+      var x      = 1;
+      var y      = 1;
       var needle = {};
       var center = {};
+      needles    = [];
 
       var needlesCount = NEEDLES_X * NEEDLES_Y;
-      var offsetX = (4/5) * CANVAS_WIDTH / NEEDLES_X;
-      var offsetY = (4/5) * CANVAS_HEIGHT / NEEDLES_Y;
+      var offsetX = DRAWING_ZONE_WIDTH / NEEDLES_X;
+      var offsetY = DRAWING_ZONE_HEIGHT / NEEDLES_Y;
 
       for(; x < NEEDLES_X; x++) {
         y = 1;
@@ -76,8 +124,8 @@
             continue;
           }
           center = {
-            x: x * offsetX + ((CANVAS_WIDTH - offsetX * NEEDLES_X) / 2),
-            y: y * offsetY + ((CANVAS_HEIGHT - offsetY * NEEDLES_Y) / 2),
+            x: x * offsetX + ((canvasWidth  - DRAWING_ZONE_WIDTH ) / 2),
+            y: y * offsetY + ((canvasHeight - DRAWING_ZONE_HEIGHT) / 2),
           };
 
           needle = {
@@ -101,8 +149,8 @@
       var isTouchEvent = e.touches ? true : false;
       var x, y;
       if(isTouchEvent) {
-        x = e.touches[0].pageX;
-        y = e.touches[0].pageY;
+        x = e.touches.item(0).pageX - this.offsetLeft;
+        y = e.touches.item(0).pageY - this.offsetTop;
       } else {
         if(typeof e.offsetX !== 'undefined') {
           x = e.offsetX;
@@ -191,8 +239,15 @@
 
     function clear() {
       context.fillStyle = CANVAS_BACKGROUND;
-      context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      context.fillRect(0, 0, canvasWidth, canvasHeight);
     }
+
+    window.onresize = function(event) {
+        canvasWidth  = window.innerWidth;
+        canvasHeight = window.innerHeight;
+        clear();
+        needles = initNeedles();
+    };
   </script>
 </body>
 </html>
